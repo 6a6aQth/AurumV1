@@ -11,16 +11,28 @@ echo "🚀 Deploying WAF Platform on DigitalOcean..."
 echo "📦 Updating system packages..."
 sudo apt update && sudo apt upgrade -y
 
-# Install Docker
-echo "🐳 Installing Docker..."
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-sudo usermod -aG docker $USER
+# Check if Docker is installed
+echo "🐳 Checking Docker installation..."
+if ! command -v docker &> /dev/null; then
+    echo "Installing Docker..."
+    curl -fsSL https://get.docker.com -o get-docker.sh
+    sudo sh get-docker.sh
+    sudo usermod -aG docker $USER
+    echo "Docker installed successfully!"
+else
+    echo "✅ Docker is already installed"
+fi
 
-# Install Docker Compose
-echo "🔧 Installing Docker Compose..."
-sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+# Check if Docker Compose is installed
+echo "🔧 Checking Docker Compose installation..."
+if ! command -v docker-compose &> /dev/null; then
+    echo "Installing Docker Compose..."
+    sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+    echo "Docker Compose installed successfully!"
+else
+    echo "✅ Docker Compose is already installed"
+fi
 
 # Configure firewall
 echo "🔥 Configuring firewall..."
@@ -34,14 +46,9 @@ echo "📁 Setting up application directory..."
 mkdir -p /opt/waf
 cd /opt/waf
 
-# Clone repository (replace with your repository URL)
+# Clone repository
 echo "📥 Cloning repository..."
-# git clone <your-repository-url> .
-
-# Copy files (if running locally)
-if [ -f "/home/baron/aurumV1/docker-compose.yml" ]; then
-    cp -r /home/baron/aurumV1/* .
-fi
+git clone https://github.com/6a6aQth/AurumV1.git .
 
 # Setup environment
 echo "⚙️ Setting up environment..."
