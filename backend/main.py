@@ -10,7 +10,7 @@ import redis
 import json
 
 from database import get_db, engine
-from models import Base, Domain, SecurityLog, AttackPattern
+from database import Base, Domain, SecurityLog, AttackPattern
 from schemas import (
     DomainCreate, DomainResponse, DomainUpdate,
     SecurityLogResponse, DashboardStats, LoginRequest,
