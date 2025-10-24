@@ -1,0 +1,4 @@
+# WAF Platform Robots.txt
+# Allow all robots to access the site
+User-agent: *
+Allow: /
