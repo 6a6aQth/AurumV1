@@ -11,17 +11,12 @@ echo "🚀 Deploying WAF Platform on DigitalOcean..."
 echo "📦 Updating system packages..."
 sudo apt update && sudo apt upgrade -y
 
-# Check if Docker is installed
-echo "🐳 Checking Docker installation..."
-if ! command -v docker &> /dev/null; then
-    echo "Installing Docker..."
-    curl -fsSL https://get.docker.com -o get-docker.sh
-    sudo sh get-docker.sh
-    sudo usermod -aG docker $USER
-    echo "Docker installed successfully!"
-else
-    echo "✅ Docker is already installed"
-fi
+# Install Docker
+echo "🐳 Installing Docker..."
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker $USER
+echo "Docker installed successfully!"
 
 # Check if Docker Compose is installed
 echo "🔧 Checking Docker Compose installation..."
