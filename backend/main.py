@@ -129,29 +129,29 @@ async def log_security_event(client_ip: str, request_path: str, request_method: 
     except Exception as e:
         logger.error(f"Failed to log security event: {e}")
 
-# Authentication endpoints
-@app.post("/admin/login")
-async def login(login_data: LoginRequest):
-    """Admin login endpoint"""
-    if login_data.password != settings.ADMIN_PASSWORD:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid password"
-        )
-    
-    access_token = create_access_token(data={"sub": "admin"})
-    return {"access_token": access_token, "token_type": "bearer"}
+# Authentication endpoints (disabled for direct access)
+# @app.post("/admin/login")
+# async def login(login_data: LoginRequest):
+#     """Admin login endpoint"""
+#     if login_data.password != settings.ADMIN_PASSWORD:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Invalid password"
+#         )
+#     
+#     access_token = create_access_token(data={"sub": "admin"})
+#     return {"access_token": access_token, "token_type": "bearer"}
 
 # Domain management endpoints
 @app.get("/admin/domains", response_model=List[DomainResponse])
-async def get_domains(current_admin: str = Depends(get_current_admin)):
+async def get_domains():
     """Get all protected domains"""
     db = next(get_db())
     domains = db.query(Domain).all()
     return domains
 
 @app.post("/admin/domains", response_model=DomainResponse)
-async def create_domain(domain_data: DomainCreate, current_admin: str = Depends(get_current_admin)):
+async def create_domain(domain_data: DomainCreate):
     """Create a new protected domain"""
     db = next(get_db())
     
@@ -181,8 +181,7 @@ async def create_domain(domain_data: DomainCreate, current_admin: str = Depends(
 @app.put("/admin/domains/{domain_id}", response_model=DomainResponse)
 async def update_domain(
     domain_id: int,
-    domain_data: DomainUpdate,
-    current_admin: str = Depends(get_current_admin)
+    domain_data: DomainUpdate
 ):
     """Update a domain configuration"""
     db = next(get_db())
@@ -204,7 +203,7 @@ async def update_domain(
     return domain
 
 @app.delete("/admin/domains/{domain_id}")
-async def delete_domain(domain_id: int, current_admin: str = Depends(get_current_admin)):
+async def delete_domain(domain_id: int):
     """Delete a domain"""
     db = next(get_db())
     domain = db.query(Domain).filter(Domain.id == domain_id).first()
@@ -225,8 +224,7 @@ async def delete_domain(domain_id: int, current_admin: str = Depends(get_current
 @app.get("/admin/logs", response_model=List[SecurityLogResponse])
 async def get_security_logs(
     limit: int = 100,
-    offset: int = 0,
-    current_admin: str = Depends(get_current_admin)
+    offset: int = 0
 ):
     """Get security logs"""
     db = next(get_db())
@@ -234,7 +232,7 @@ async def get_security_logs(
     return logs
 
 @app.get("/admin/stats", response_model=DashboardStats)
-async def get_dashboard_stats(current_admin: str = Depends(get_current_admin)):
+async def get_dashboard_stats():
     """Get dashboard statistics"""
     db = next(get_db())
     
@@ -270,8 +268,7 @@ async def get_dashboard_stats(current_admin: str = Depends(get_current_admin)):
 @app.get("/admin/logs/export")
 async def export_logs(
     start_date: Optional[str] = None,
-    end_date: Optional[str] = None,
-    current_admin: str = Depends(get_current_admin)
+    end_date: Optional[str] = None
 ):
     """Export security logs to CSV"""
     db = next(get_db())

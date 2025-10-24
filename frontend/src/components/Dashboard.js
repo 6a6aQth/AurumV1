@@ -1,6 +1,5 @@
 import React from 'react';
 import { useQuery } from 'react-query';
-import { useAuth } from '../contexts/AuthContext';
 import { 
   Shield, 
   Globe, 
@@ -13,14 +12,10 @@ import {
 import axios from 'axios';
 
 const Dashboard = () => {
-  const { token } = useAuth();
-
   const { data: stats, isLoading, error } = useQuery(
     'dashboard-stats',
     async () => {
-      const response = await axios.get('/admin/stats', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await axios.get('/admin/stats');
       return response.data;
     },
     {

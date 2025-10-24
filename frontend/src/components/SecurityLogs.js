@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
-import { useAuth } from '../contexts/AuthContext';
 import { 
   FileText, 
   Download, 
@@ -14,7 +13,6 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 const SecurityLogs = () => {
-  const { token } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterReason, setFilterReason] = useState('');
 
@@ -25,18 +23,14 @@ const SecurityLogs = () => {
       if (searchTerm) params.append('search', searchTerm);
       if (filterReason) params.append('reason', filterReason);
       
-      const response = await axios.get(`/admin/logs?${params.toString()}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await axios.get(`/admin/logs?${params.toString()}`);
       return response.data;
     }
   );
 
   const handleExport = async () => {
     try {
-      const response = await axios.get('/admin/logs/export', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await axios.get('/admin/logs/export');
       
       // Create and download CSV file
       const blob = new Blob([response.data.csv_data], { type: 'text/csv' });

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { useAuth } from '../contexts/AuthContext';
 import { 
   Plus, 
   Edit, 
@@ -15,7 +14,6 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 const DomainManagement = () => {
-  const { token } = useAuth();
   const queryClient = useQueryClient();
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingDomain, setEditingDomain] = useState(null);
@@ -23,18 +21,14 @@ const DomainManagement = () => {
   const { data: domains, isLoading } = useQuery(
     'domains',
     async () => {
-      const response = await axios.get('/admin/domains', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await axios.get('/admin/domains');
       return response.data;
     }
   );
 
   const addDomainMutation = useMutation(
     async (domainData) => {
-      const response = await axios.post('/admin/domains', domainData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await axios.post('/admin/domains', domainData);
       return response.data;
     },
     {
@@ -51,9 +45,7 @@ const DomainManagement = () => {
 
   const updateDomainMutation = useMutation(
     async ({ id, data }) => {
-      const response = await axios.put(`/admin/domains/${id}`, data, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await axios.put(`/admin/domains/${id}`, data);
       return response.data;
     },
     {
@@ -70,9 +62,7 @@ const DomainManagement = () => {
 
   const deleteDomainMutation = useMutation(
     async (id) => {
-      await axios.delete(`/admin/domains/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await axios.delete(`/admin/domains/${id}`);
     },
     {
       onSuccess: () => {

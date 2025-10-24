@@ -1,19 +1,16 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 import { 
   Shield, 
   Home, 
   Globe, 
   FileText, 
-  LogOut,
   Menu,
   X
 } from 'lucide-react';
 import { useState } from 'react';
 
 const Layout = ({ children }) => {
-  const { logout } = useAuth();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -69,19 +66,16 @@ const Layout = ({ children }) => {
             </nav>
           </div>
           <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
-            <button
-              onClick={logout}
-              className="flex-shrink-0 w-full group block"
-            >
+            <div className="flex-shrink-0 w-full group block">
               <div className="flex items-center">
-                <LogOut className="h-6 w-6 text-gray-400 group-hover:text-gray-500" />
+                <Shield className="h-6 w-6 text-gray-400" />
                 <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                    Sign out
+                  <p className="text-sm font-medium text-gray-700">
+                    WAF Admin
                   </p>
                 </div>
               </div>
-            </button>
+            </div>
           </div>
         </div>
       </div>
@@ -116,19 +110,16 @@ const Layout = ({ children }) => {
               </nav>
             </div>
             <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
-              <button
-                onClick={logout}
-                className="flex-shrink-0 w-full group block"
-              >
+              <div className="flex-shrink-0 w-full group block">
                 <div className="flex items-center">
-                  <LogOut className="h-6 w-6 text-gray-400 group-hover:text-gray-500" />
+                  <Shield className="h-6 w-6 text-gray-400" />
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                      Sign out
+                    <p className="text-sm font-medium text-gray-700">
+                      WAF Admin
                     </p>
                   </div>
                 </div>
-              </button>
+              </div>
             </div>
           </div>
         </div>
