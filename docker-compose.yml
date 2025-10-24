@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: waf_db
+      POSTGRES_USER: waf_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-waf_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - waf_network
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://waf_user:${DB_PASSWORD:-waf_password}@db:5432/waf_db
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      SECRET_KEY: ${SECRET_KEY:-your-secret-key-change-this}
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - db
+      - redis
+    networks:
+      - waf_network
+    restart: unless-stopped
+    volumes:
+      - ./logs:/app/logs
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      REACT_APP_API_URL: http://localhost:8000
+    networks:
+      - waf_network
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - backend
+      - frontend
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./logs:/var/log/nginx
+    networks:
+      - waf_network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - waf_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  waf_network:
+    driver: bridge

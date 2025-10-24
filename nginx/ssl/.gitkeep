@@ -1,0 +1,10 @@
+# SSL certificates directory
+# Place your SSL certificates here for production deployment
+
+# Files to place here:
+# - cert.pem (SSL certificate)
+# - key.pem (SSL private key)
+
+# For Let's Encrypt certificates:
+# - Copy fullchain.pem as cert.pem
+# - Copy privkey.pem as key.pem

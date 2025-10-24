@@ -1,0 +1,8 @@
+# WAF Logs Directory
+# This directory contains application logs
+
+# Log files
+*.log
+
+# Keep directory structure
+!.gitkeep
