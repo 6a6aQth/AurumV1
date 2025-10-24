@@ -206,7 +206,7 @@ async def update_domain(
     return domain
 
 @app.delete("/admin/domains/{domain_id}")
-async def delete_domain(domain_id: int)
+async def delete_domain(domain_id: int):
     """Delete a domain"""
     db = next(get_db())
     domain = db.query(Domain).filter(Domain.id == domain_id).first()
