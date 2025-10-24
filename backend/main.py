@@ -165,7 +165,7 @@ async def create_domain(domain_data: DomainCreate):
     
     domain = Domain(
         domain_name=domain_data.domain_name,
-        target_url=domain_data.target_url,
+        target_url=str(domain_data.target_url),
         security_level=domain_data.security_level,
         rate_limit=domain_data.rate_limit,
         is_active=domain_data.is_active
@@ -194,7 +194,10 @@ async def update_domain(
         )
     
     for field, value in domain_data.dict(exclude_unset=True).items():
-        setattr(domain, field, value)
+        if field == 'target_url':
+            setattr(domain, field, str(value))
+        else:
+            setattr(domain, field, value)
     
     db.commit()
     db.refresh(domain)
@@ -203,7 +206,7 @@ async def update_domain(
     return domain
 
 @app.delete("/admin/domains/{domain_id}")
-async def delete_domain(domain_id: int):
+async def delete_domain(domain_id: int)
     """Delete a domain"""
     db = next(get_db())
     domain = db.query(Domain).filter(Domain.id == domain_id).first()
