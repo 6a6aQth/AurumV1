@@ -41,23 +41,30 @@ echo "📁 Setting up application directory..."
 mkdir -p /opt/waf
 cd /opt/waf
 
-# Clone repository
+# Clone repository (handle existing directory)
 echo "📥 Cloning repository..."
-git clone https://github.com/6a6aQth/AurumV1.git .
+if [ -d ".git" ]; then
+    echo "Repository already exists, pulling latest changes..."
+    git pull origin main
+elif [ -f "docker-compose.yml" ]; then
+    echo "WAF files already exist, skipping clone..."
+else
+    echo "Cloning fresh repository..."
+    git clone https://github.com/6a6aQth/AurumV1.git .
+fi
 
 # Setup environment
 echo "⚙️ Setting up environment..."
 if [ ! -f .env ]; then
     cp env.example .env
-    echo "Please edit .env file with your configuration:"
-    echo "nano .env"
+    echo "✅ Environment file created from env.example"
+    echo "Using pre-configured values:"
+    echo "- Admin Password: bmwX6bl@ck"
+    echo "- Database Password: bmwX6black"
+    echo "- Server IP: 157.245.116.55"
     echo ""
-    echo "Important settings to configure:"
-    echo "- ADMIN_PASSWORD: Set a strong admin password"
-    echo "- DB_PASSWORD: Set a secure database password"
-    echo "- SECRET_KEY: Generate a random secret key"
-    echo ""
-    read -p "Press Enter after configuring .env file..."
+else
+    echo "✅ Environment file already exists"
 fi
 
 # Create logs directory
