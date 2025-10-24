@@ -133,7 +133,7 @@ async def log_security_event(client_ip: str, request_path: str, request_method: 
 @app.post("/admin/login")
 async def login(login_data: LoginRequest):
     """Admin login endpoint"""
-    if not verify_password(login_data.password, settings.ADMIN_PASSWORD):
+    if login_data.password != settings.ADMIN_PASSWORD:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid password"
